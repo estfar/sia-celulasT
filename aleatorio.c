@@ -1,5 +1,5 @@
 //double  RAND_MAX = 4294967296.0; //2147483647; //
-void aleatorio();
+void randomize();
 void warmup_random(double);
 void advance_random();
 int flip(double);
@@ -13,20 +13,16 @@ int jrand;                                             /* current random number 
 
 
 /* Initialize random numbers batch */
-void aleatorio()
+void randomize()
 {
-		int j1;
-		time_t t;
+	int j1;
 
-		srand((unsigned) time(&t));
-		/*srand(time(0));*/
-		Rseed = ((double) rand());
-		/*printf( "\n \n %f ", Rseed);*/
-		Rseed /= RAND_MAX;
-		for(j1=0; j1<=54; j1++)
-			oldrand[j1] = 0.0;
-		jrand=0;
-		warmup_random(Rseed);
+    for(j1=0; j1<=54; j1++)
+      oldrand[j1] = 0.0;
+
+    jrand=0;
+
+     warmup_random(Rseed);
 }
 
 
@@ -121,4 +117,12 @@ double aleatorios_0_1(){
 	if(i > high) i = high;
     }
     return(i);
+}
+
+/* real random number between specified limits */
+
+float rndreal(float lo ,float hi)
+
+{
+    return((randomperc() * (hi - lo)) + lo);
 }
