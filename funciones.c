@@ -4,6 +4,11 @@
 #define PI 3.14159265358979323846
 #include "rand.c"
 
+double A[4][10] = {{4.0, 1.0, 8.0, 6.0, 3.0, 2.0, 5.0, 8.0, 6.0, 7.0},
+				  {4.0, 1.0, 8.0, 6.0, 7.0, 9.0, 5.0, 1.0, 2.0, 3.6},
+				  {4.0, 1.0, 8.0, 6.0, 3.0, 2.0, 3.0, 8.0, 6.0, 7.0},
+				  {4.0, 1.0, 8.0, 6.0, 7.0, 9.0, 3.0, 1.0, 2.0, 3.6}};
+double C[10] = {0.1, 0.2, 0.2, 0.4, 0.6, 0.6, 0.3, 0.7, 0.5, 0.5};
 double f5(double *x){
 	//limites = -65.536 65.536
 double a[2][25];
@@ -96,7 +101,7 @@ double f4(double *x){
 	int n = 2;
 	double sum = 0.0;
 	for(i = 0; i< n; i++){
-		sum += (i+1)*pow(x[i],4) + rndreal(0,1);
+		//sum += (i+1)*pow(x[i],4) + rndreal(0,1);
 	}
 	return sum ;
 }
@@ -130,5 +135,93 @@ double gold_price(double *x){
 }
 
 double RCOS(double *x){
-	return 1.0*pow(x[1] - (5.1/(4*PI*PI))*x[1]*x[1] + 5*x[0]/PI - 36.0, 2) + 10.0*((1-1/(8*PI))*cos(x[0])) + 10.0;
+	// x1: [-5,10]
+	// x2: [0,15]
+	// tres minimos
+	// (-pi,12.25) = (pi,2.275) =(9.42478,2.475) 0.397887
+	double a, b, c, d, e, f;
+	a = 1.0;
+	b = 5.1/(4.0*PI*PI);
+	c = 5.0/(PI);
+	d = 6.0;
+	e = 10.0;
+	f = 1.0/(8.0*PI);
+	return a*pow(x[1] - b*x[0]*x[0] + c*x[0] - d, 2) + e*((1.0-f)*cos(x[0])) + e;
+}
+
+double SQRN5(double *x){
+	// xi: [0, 10]
+	// s3 = (4,4,4,4) = -10.15320 j = 5
+	// s4 = (4,4,4,4) = -10.402820 j= 7
+	// s5 = (4,4,4,4) = -10.53628 j=10
+		double r, res = 0.0;
+	int j, i;
+	for (j=0; j<7; j++){
+		r = 0.0;
+		for (i = 0; i< 4; i++){
+			r += pow((x[i] - A[i][j]), 2.0) + C[j];
+		}
+		res += (1.0/r);
+	}
+	
+	return -res;
+}
+
+double sixhump(double *x){
+	// x1: [-3, 3]
+	// x2: [-2, 2]
+	// (-0.0898, 0.7126) = -1.0316
+	// (0.0898, -0.7126) = -1.0316
+	return (4.0 - 2.1*x[0]*x[0] + pow(x[0],4)/3)*x[0]*x[0] + x[0]*x[1] + (-4.0 + 4.0*x[1]*x[1])*x[1]*x[1];
+}
+
+double shubert(double *x){
+	// xi [-10.0, 10.0]
+	// 760 local minima, 18 of which are global minima
+	// whit -186.73
+	double r1, r2;
+	r1 = r2 = 0.0;
+	int i, j;
+	for (i = 0; i<5; i++){
+		r1 += (i+1.0)*cos((i+2.0)*x[0] + (i+1.0));
+		r2 += (i+1.0)*cos((i+2.0)*x[2] + (i+1.0));
+	}
+	return r1*r2;
+}
+
+double stuckman(double *x){
+	// xi [0, 10.0]
+	// The global maximum is located at
+	/*
+				(r11, r21) si m1 > m2
+	(x1, x2) =  (r12, r22) de lo contrario
+	*/
+}
+
+double easom(double *x){
+	// xi [-100, 100]
+	//minimim (PI,PI) = -1
+	return -cos(x[0])*cos(x[1])*exp(-pow(x[0]-PI,2.0)-pow(x[1]-PI,2.0));
+}
+
+double b1(double *x){
+	//xi [-50, 50]
+	// (0,0) = 0
+	return x[0]*x[0] + 2*x[1]*x[1] - 0.3*cos(3.0*PI*x[0]) - 0.4*cos(4.0*PI*x[1]) + 0.7;
+}
+
+double b2(double *x){
+	//xi [-50, 50]
+	// (0,0) = 0
+	return x[0]*x[0] + 2*x[1]*x[1] - 0.3*(cos(3.0*PI*x[0])*cos(4.0*PI*x[1])) + 0.3;
+}
+
+double b3(double *x){
+	//xi [-50, 50]
+	// (0,0) = 0
+	return x[0]*x[0] + 2*x[1]*x[1] - 0.3*cos(3.0*PI*x[0]) - cos(4.0*PI*x[1]) + 0.3;
+}
+
+double colville(double *x){
+	return 100.0*pow(x[1]-x[0]*x[0],2.0) + pow(1-x[0],2.0) + 90.0*pow(x[3]-x[2]*x[2],2.0) + pow(1.0 - x[2],2.0) + 10.1*(pow(x[1]-1.0,2.0) + pow(x[3]-1.0,2.0)) + 19.8*(x[1]-1.0)*(x[3]-1.0);
 }
