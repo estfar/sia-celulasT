@@ -6,7 +6,7 @@ para problemas de optimización mono-objetivo.
 Con representación real
 */
 #define tampob 100 /* tamaño de población */
-#define numrmp 30  /* numero de individuos que se reemplazan cada generación */ 
+#define numrmp 20  /* numero de individuos que se reemplazan cada generación */ 
 #define nclon 8 	
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,11 +19,18 @@ int main(int argc, char * argv[])
 {
 	//fun = &t3;
 	//fun = &f5;
-	fun = &gold_price;
-
-	Rseed = 0.0;
-	lim[0] =  -2.0;
-	lim[1] = 2.0;
+	//fun = &gold_price;
+	fun = &colville;
+	Rseed = 0.9;
+	lim[0][0] =  -10.0;
+	lim[0][1] = 10.0;
+	lim[1][0] = -10.0;
+	lim[1][1] = 10.0;
+	lim[2][0] = -10.0;
+	lim[2][1] = 10.0;
+	lim[3][0] = -10.0;
+	lim[3][1] = 10.0;
+	
 	int i;
 	tol = 0.000000001;
 	tampobclon = 0;
@@ -47,8 +54,7 @@ int main(int argc, char * argv[])
 	ordenamiento(0, tampob-1, (pob));
 	
 	//Gmax = 280;
-	printf("random: %f\n", rndreal(lim[0], lim[1]));
-	Gmax = 1000;
+	Gmax = 2500;
 	for (gen = 0; gen < Gmax; gen++){
 		
 		generacion();
@@ -173,7 +179,7 @@ void inicializar_pob(){
 		
 		for( i = 0 ; i < longitud ; i++){
 
-			pob[j].cadena[i]=rndreal(lim[0], lim[1]);
+			pob[j].cadena[i]=rndreal(lim[i][0], lim[i][1]);
 		}
 		
 		objetivo(&(pob[j]));
@@ -358,11 +364,11 @@ void hipermutar(){
 	int i,j, k;
 	int clon = 0;
 	//nm = 20.0;
-	//nm = 100.0 + gen;
+	nm = 100.0 + gen;
 	double sigma, s1, s2;
 	//double lim[2] = {-1.28, 1.28};
 	k= 0;
-	nm = 40.0;
+	//nm = 40.0;
 	for (i=0; i<tampobclon; i++){
 		clones[i].mutaciones = 0;
 		/*expresión de pm de CLONALG*/
@@ -379,7 +385,7 @@ void hipermutar(){
 				/* Mutación polinomial (parameter based mutation) */
 				//u = rndreal(0.0, 1.0);
 				
-				sigma = min(clones[i].cadena[j] - lim[0], lim[1] - clones[i].cadena[j]) / (lim[1] - lim[0]);
+				sigma = min(clones[i].cadena[j] - lim[j][0], lim[j][1] - clones[i].cadena[j]) / (lim[j][1] - lim[j][0]);
 				//s1 = (clones[i].cadena[j] - lim[0])/ (lim[1]-lim[0]);
 				//s2 = (lim[1]- clones[i].cadena[j])/ (lim[1]-lim[0]);
 				u = rndreal(0,1);
@@ -388,17 +394,17 @@ void hipermutar(){
 				sr = 1.0 - pow(2.0*(1.0-u) + 2.0*(u-0.5)*pow((1.0-sigma), nm+1.0), (1.0/(1.0+nm)));
 				
 				if (u > 0.5){
-					clones[i].cadena[j] += sr*(lim[1] -lim[0]);
+					clones[i].cadena[j] += sr*(lim[j][1] -lim[j][0]);
 					//printf("sr: %f\n", sr);
 				}else{
-					clones[i].cadena[j] += sl*(lim[1]- lim[0]);
+					clones[i].cadena[j] += sl*(lim[j][1]- lim[j][0]);
 					//printf("sl: %f\n", sl);
 				}
 
-				if (clones[i].cadena[j] > lim[1] ){
-					clones[i].cadena[j] = lim[1];
-				}else if(clones[i].cadena[j] < lim[0]){
-					clones[i].cadena[j] = lim[0];
+				if (clones[i].cadena[j] > lim[j][1] ){
+					clones[i].cadena[j] = lim[j][1];
+				}else if(clones[i].cadena[j] < lim[j][0]){
+					clones[i].cadena[j] = lim[j][0];
 				}
 				
 				clones[i].mutaciones++;
@@ -523,7 +529,7 @@ void reemplazar(int n){
 	for (i = tampob-1; i>= tampob-n; i--){
 		
 		for (j = 0; j < longitud; j++){
-			nuevapob[i].cadena[j] = rndreal(lim[0], lim[1]);
+			nuevapob[i].cadena[j] = rndreal(lim[j][0], lim[j][1]);
 		}
 		objetivo(&(nuevapob[i]));
 		
