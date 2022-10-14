@@ -5,9 +5,9 @@ para problemas de optimización mono-objetivo.
 26-sept-22
 con representación real
 */
-#define longitud 4
+#define longitud 30
 //76 /* longitud de los anticuerpos */
-#define numvar 4  /* numero de variables de decisión */
+#define numvar 30  /* numero de variables de decisión */
 #include "aleatorio.c"
 //#include "funciones.h"	
 
@@ -68,3 +68,14 @@ double lim[numvar][2];
 double tol;
 // seria mejor si declaro la varible que va a contener mi función? yo creo que sí ja
 
+double m1, m2;
+double B;
+double r[2][2];
+/********************************/
+/* m1 y m2 son variables aleatorias [0,100]*/
+/* B es una variable aleatoria [0,10]*/
+/* r11 es una variable aleatoria [0,B]*/
+/* r12 es una variable aleatoria [B,10]*/
+/* r21 es una variable aleatoria [0,10]*/
+/* r22 es una variable aleatoria [B,10]*/
+/********************************/
