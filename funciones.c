@@ -9,6 +9,10 @@ double A[4][10] = {{4.0, 1.0, 8.0, 6.0, 3.0, 2.0, 5.0, 8.0, 6.0, 7.0},
 				  {4.0, 1.0, 8.0, 6.0, 3.0, 2.0, 3.0, 8.0, 6.0, 7.0},
 				  {4.0, 1.0, 8.0, 6.0, 7.0, 9.0, 3.0, 1.0, 2.0, 3.6}};
 double C[10] = {0.1, 0.2, 0.2, 0.4, 0.6, 0.6, 0.3, 0.7, 0.5, 0.5};
+
+
+
+
 double f5(double *x){
 	//limites = -65.536 65.536
 double a[2][25];
@@ -62,13 +66,13 @@ double a[2][25];
 
 /* Generalized Rosembrock's function */
 double f2(double *x){
-	// intervalo de las variables -5.12 5.12
-	int i,j;
+	// intervalo de las variables -2.048, 2.048
+	//int i,j;
 	double sum;
 	sum = 0.0;
-	for(i = 0; i<2-1; i++){
-		sum = (100.*pow(x[i+1] - pow(x[i],2),2) + pow((x[i]-1),2));
-	}
+	//for(i = 0; i<2-1; i++){
+		sum = (100.*pow(x[0]*x[0] - pow(x[1],2),2) + pow((1.0-x[0]),2));
+	//}
 	return sum;
 }
 
@@ -77,10 +81,10 @@ double f3(double *x){
 	int i,j;
 	double sum;
 	sum = 0.0;
-	for (i=0; i<2; i++){
-		sum += floor(x[i]);
+	for (i=0; i<5; i++){
+		sum += (int)(x[i]);
 	}
-	return 12.0+sum;
+	return sum;
 }
 
 double t3(double *x){
@@ -97,11 +101,12 @@ double clong1(double *x){
 }
 
 double f4(double *x){
+	// [-1.28, 1.28]
 	int i;
 	int n = 2;
 	double sum = 0.0;
 	for(i = 0; i< n; i++){
-		//sum += (i+1)*pow(x[i],4) + rndreal(0,1);
+		sum += (i+1)*pow(x[i],4) + rndreal(0,1);
 	}
 	return sum ;
 }
@@ -110,8 +115,8 @@ double f8(double *x){
 	//[-500 500]
 	int i;
 	double sum = 0.0;
-	for (i=0; i<4; i++){
-		sum += (-1)*x[i]*sin(sqrt(abs(x[i])));
+	for (i=0; i<30; i++){
+		sum += (-1.0)*x[i]*sin(sqrt(abs(x[i])));
 	}
 	return sum;
 }
@@ -190,12 +195,26 @@ double shubert(double *x){
 }
 
 double stuckman(double *x){
+	// Es discreta :))))
 	// xi [0, 10.0]
 	// The global maximum is located at
 	/*
 				(r11, r21) si m1 > m2
 	(x1, x2) =  (r12, r22) de lo contrario
 	*/
+	
+	double a1, a2, res;
+	a1 = floor(abs(x[0] - r[0][0]) + abs(x[1] - r[1][0]));
+	a2 = floor(abs(x[0] - r[0][1]) + abs(x[1] - r[1][1]));
+	res = 0.0;
+
+	if ( x[0] > B){
+		res = floor((floor(m2) + 0.5)*sin(a2)/a2);
+	}
+	else{
+		res = floor((floor(m1) + 0.5)*sin(a1)/a1);
+	}
+	return -res;
 }
 
 double easom(double *x){
