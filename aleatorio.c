@@ -6,6 +6,7 @@ int flip(double);
 double randomperc();
 double aleatorios_0_1();
 long  rnd(long, long);
+float rndreal(float,float);
 
 double  Rseed;			       		         /* Random numbers seed */
 double oldrand[55];                               /* Array of 55 random numbers */
